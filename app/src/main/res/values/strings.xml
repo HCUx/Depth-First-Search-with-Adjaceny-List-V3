@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Depth First Search with Adjaceny List</string>
+    <string name="derece_getir">Derece Getir</string>
+    <string name="d_m_numaras_gir">Düğüm Numarası Gir</string>
+    <string name="se_ilen_d_m_derecesi">Seçilen Düğüm Derecesi :</string>
+    <string name="nan">NaN</string>
+    <string name="toplam_kenar">Toplam Kenar : </string>
+    <string name="complete_graf_m">Complete Graf Mı :</string>
+    <string name="d_dizisi">Ulaşma[D]\nİşleme[F]</string>
+    <string name="gezinme_durumu">Gezinme Durumu :</string>
+</resources>
