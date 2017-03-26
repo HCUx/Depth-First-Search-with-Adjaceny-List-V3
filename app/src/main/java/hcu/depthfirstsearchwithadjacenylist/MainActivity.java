@@ -27,13 +27,12 @@ public class MainActivity extends AppCompatActivity {
     private EditText dereceText;
     private LinearLayout linearNodeDegree,InfoLayout;
     ListView AccessTimeList,ExplorerList;
-    private TextView nodeDegreeBack,totalEdgeCountBack,completeGraphBack,processTimeBack;
+    private TextView nodeDegreeBack,totalEdgeCountBack,completeGraphBack;
     private String MatrixFileRow;
     private String[] MatrixFileRowParts;
     private Node[] node;
     private int nodeCount = 0,totalEdge = 0;
     private Watch ZamanTutucu;
-    private boolean fileState;
     ArrayAdapter<String> ExplorerArray,AccessArray;
 
 
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ana_ekran);//ana ekran tasarımını set ettik.
         initUI(); //ekrandaki componentleri yüklemesi için fonksiyonu çağırdık
-        fileState = ReadNodeCountFromFile(); //düğüm sayısını buluyoruz
+        boolean fileState = ReadNodeCountFromFile();
         InfoLayout.setVisibility(View.GONE);
 
         if(fileState){
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         nodeDegreeBack = (TextView) findViewById(R.id.nodeDegreeBack);
         totalEdgeCountBack = (TextView) findViewById(R.id.totalEdgeCountBack);
         completeGraphBack = (TextView) findViewById(R.id.completeGraphBack);
-        processTimeBack = (TextView) findViewById(R.id.processTimeBack);
         ExplorerList = (ListView) findViewById(R.id.ExplorerBack);
         AccessTimeList = (ListView) findViewById(R.id.accessTimeBack);
         AccessArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             totalEdge += node[i].getNodeDegree();
         }
         totalEdge /= 2;
-        totalEdgeCountBack.setText(totalEdge);
+        totalEdgeCountBack.setText(String.valueOf(totalEdge));
 
         if(totalEdge != nodeCount*(nodeCount-1)/2)
             completeGraphBack.setText("HAYIR");
