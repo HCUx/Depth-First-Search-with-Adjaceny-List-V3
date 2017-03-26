@@ -4,15 +4,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:clipToPadding="false"
-        android:fillViewport="false">
-
-
         <LinearLayout
             android:id="@+id/InfoLayoutAll"
             android:layout_width="match_parent"
@@ -68,13 +59,15 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:gravity="center_vertical|center_horizontal"
                     android:id="@+id/totalEdgeCountFront"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="@string/toplam_kenar" />
 
                 <TextView
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:id="@+id/totalEdgeCountBack"
                     android:layout_width="match_parent"
@@ -89,25 +82,42 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:gravity="center_vertical|center_horizontal"
                     android:id="@+id/completeGraphFront"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="@string/complete_graf_m" />
 
                 <TextView
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:id="@+id/completeGraphBack"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/nan" />
             </LinearLayout>
+        </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/InfoLayoutAll"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/LinearExplorer"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.8"
+                android:background="@android:color/holo_blue_dark"
                 android:orientation="horizontal">
 
                 <TextView
@@ -122,22 +132,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
+                    android:fillViewport="true"
                     android:padding="10dp">
 
-                    <TextView
+                    <!-- <TextView
                         android:id="@+id/explorerBack"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content" /> -->
+
+                    <ListView
+                        android:id="@+id/ExplorerBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </ListView>
                 </ScrollView>
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/LinearDTime"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.8"
+                android:background="@android:color/holo_orange_light"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal">
 
@@ -153,19 +171,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
+                    android:fillViewport="true"
                     android:padding="10dp">
 
-                    <TextView
+                    <ListView
                         android:id="@+id/accessTimeBack"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content">
+
+                    </ListView>
+                    <!--
+                            <TextView
+                                android:id="@+id/accessTimeBack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" /> -->
                 </ScrollView>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LinearFTime"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
@@ -190,9 +216,8 @@
                         android:layout_height="wrap_content" />
                 </ScrollView>
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
+
 
 </RelativeLayout>

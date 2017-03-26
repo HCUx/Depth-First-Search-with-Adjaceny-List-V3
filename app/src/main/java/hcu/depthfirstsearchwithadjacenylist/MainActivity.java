@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,13 +26,15 @@ public class MainActivity extends AppCompatActivity {
     private Button dereceGetir;
     private EditText dereceText;
     private LinearLayout linearNodeDegree,InfoLayout;
-    private TextView nodeDegreeBack,totalEdgeCountBack,completeGraphBack,accessTimeBack,processTimeBack,ExplorerBack;
+    ListView AccessTimeList,ExplorerList;
+    private TextView nodeDegreeBack,totalEdgeCountBack,completeGraphBack,processTimeBack;
     private String MatrixFileRow;
     private String[] MatrixFileRowParts;
     private Node[] node;
     private int nodeCount = 0,totalEdge = 0;
     private Watch ZamanTutucu;
     private boolean fileState;
+    ArrayAdapter<String> ExplorerArray,AccessArray;
 
 
     @Override
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         initUI(); //ekrandaki componentleri yüklemesi için fonksiyonu çağırdık
         fileState = ReadNodeCountFromFile(); //düğüm sayısını buluyoruz
         InfoLayout.setVisibility(View.GONE);
+
         if(fileState){
             InfoLayout.setVisibility(View.VISIBLE);
             CreateFirstNodes(); //ilk düğümleri oluşturuyoruz
@@ -62,9 +67,13 @@ public class MainActivity extends AppCompatActivity {
         nodeDegreeBack = (TextView) findViewById(R.id.nodeDegreeBack);
         totalEdgeCountBack = (TextView) findViewById(R.id.totalEdgeCountBack);
         completeGraphBack = (TextView) findViewById(R.id.completeGraphBack);
-        accessTimeBack = (TextView) findViewById(R.id.accessTimeBack);
         processTimeBack = (TextView) findViewById(R.id.processTimeBack);
-        ExplorerBack = (TextView) findViewById(R.id.explorerBack);
+        ExplorerList = (ListView) findViewById(R.id.ExplorerBack);
+        AccessTimeList = (ListView) findViewById(R.id.accessTimeBack);
+        AccessArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        ExplorerArray = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        ExplorerList.setAdapter(ExplorerArray);
+        AccessTimeList.setAdapter(AccessArray);
 
         nodeDegreeBack.setTextColor(Color.MAGENTA); //Kullanının sorduğu düğüm derecesi rengi
         linearNodeDegree.setVisibility(View.GONE);  //Kullanıcıdan değer alınmadan önce gösterilmesini istemiyoruz.
@@ -72,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected boolean ReadNodeCountFromFile(){
         File fileMatrix = new File(Environment.getExternalStorageDirectory(),"DFSMatrix.txt");//Dosyayı açıyoruz.
+
         try {
             //bu kısımda toplam düğüm sayısını buluyoruz
             BufferedReader FileMatrixBufferR = new BufferedReader(new FileReader(fileMatrix)); //dosyayı okuyacak bellek alanı için yardımcı sınıfı çağırdık
@@ -82,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             MatrixFileRowParts = null;
             MatrixFileRow = null;
             return true;
+
         }catch (FileNotFoundException e){
             Toast.makeText(getApplicationContext(),"DOSYA BULUNAMADI",Toast.LENGTH_LONG).show();
             return false;
@@ -90,49 +101,59 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"DOSYA OKUNAMADI",Toast.LENGTH_LONG).show();
             return false;
         }
+
     }
 
     protected void CreateFirstNodes(){
+
         node = new Node[nodeCount];
+
         for(int i=0;i<nodeCount;i++){
             node[i] = new Node(nodeCount);
             node[i].setNodeName(i+" Nolu Node");
         }
+
     }
 
     protected void ReadMatrixFromFile_CreateGraph(){
         File fileMatrix = new File(Environment.getExternalStorageDirectory(),"DFSMatrix.txt");//Dosyayı açıyoruz.
+
         try {
             //bu kısımda toplam düğüm sayısını buluyoruz
             BufferedReader FileMatrixBufferR = new BufferedReader(new FileReader(fileMatrix)); //dosyayı okuyacak bellek alanı için yardımcı sınıfı çağırdık
             int arrayIndex=0;
             MatrixFileRow = FileMatrixBufferR.readLine();//dosyamızın ilk satırını okuduk
+
             while(MatrixFileRow!=null) {
                 MatrixFileRowParts = MatrixFileRow.split(" "); //okunana satırdaki elemanları diziye attık
                 node[arrayIndex].setAdjacent(node,MatrixFileRowParts);
                 MatrixFileRow = FileMatrixBufferR.readLine();
                 arrayIndex++;
             }
+
         }catch (FileNotFoundException e){
             Toast.makeText(getApplicationContext(),"DOSYA BULUNAMADI",Toast.LENGTH_LONG).show();
         }
         catch (IOException e){
             Toast.makeText(getApplicationContext(),"DOSYA OKUNAMADI",Toast.LENGTH_LONG).show();
         }
+
     }
 
     //DFS ALGORİTMASINA GÖRE GEZGİN
     protected void DFS_Gezgini(Node node){
-        node.setNode_DTime(node.getNode_DTime()+1);
-        ExplorerBack.setText(ExplorerBack.getText()+node.getNodeName()+" Girildi\n");
+
+        ExplorerArray.add(node.getNodeName()+" Girildi\n");
+        ExplorerArray.notifyDataSetChanged();
 
         if(node.getNodeColor().equalsIgnoreCase("White")){
 
+            AccessArray.add("[D]"+node.getNodeName()+" Erişildi\n");
+            AccessArray.notifyDataSetChanged();
+
             node.setNodeColor("Grey");
-            ZamanTutucu = new Watch();
-            ZamanTutucu.startAccessTime();
-            accessTimeBack.setText(accessTimeBack.getText()+"[D]"+node.getNodeName()+" Erişildi\n");
-            ExplorerBack.setText(ExplorerBack.getText()+node.getNodeName()+" Gri Yapıldı\n");
+            ExplorerArray.add(node.getNodeName()+" Gri Yapıldı\n");
+            ExplorerArray.notifyDataSetChanged();
 
             for(int i = 0 ; i<node.getAdjacentCount() ; i++){
                 if(node.getAdjacent()[i] != null && node.getAdjacent()[i].getNodeColor().equalsIgnoreCase("White")){
@@ -143,15 +164,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         node.setNodeColor("Black");
-        ExplorerBack.setText(ExplorerBack.getText()+node.getNodeName()+" Siyah Yapıldı\n");
-        ZamanTutucu.startProcessTime();
-        accessTimeBack.setText(accessTimeBack.getText()+"[F]"+node.getNodeName()+" İşlendi\n");
-        node.setNode_FTime(node.getNode_FTime()+1);
-        ExplorerBack.setText(ExplorerBack.getText()+node.getNodeName()+" Çıkıldı\n");
+        ExplorerArray.add(node.getNodeName()+" Siyah Yapıldı\n");
+
+        AccessArray.add("[F]"+node.getNodeName()+" İşlendi\n");
+        AccessArray.notifyDataSetChanged();
+
+        ExplorerArray.add(node.getNodeName()+" Çıkıldı\n");
+        ExplorerArray.notifyDataSetChanged();
 
     }
 
     protected void setListeners(){
+
         dereceGetir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,15 +184,17 @@ public class MainActivity extends AppCompatActivity {
                 linearNodeDegree.setVisibility(View.VISIBLE);
             }
         });
+
     }
 
     //Complete Graph mı ve Kenar Sayısı Tespiti
     protected void copleteGraph_and_EdgeCount(){
+
         for(int i = 0;i<nodeCount;i++){
             totalEdge += node[i].getNodeDegree();
         }
         totalEdge /= 2;
-        totalEdgeCountBack.setText(totalEdge+"");
+        totalEdgeCountBack.setText(totalEdge);
 
         if(totalEdge != nodeCount*(nodeCount-1)/2)
             completeGraphBack.setText("HAYIR");
@@ -177,10 +203,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void DTime_and_FTime(){
-        for (Node aNode : node) {
-            accessTimeBack.setText(accessTimeBack.getText() + "" + aNode.getNodeName() + " için " + aNode.getNode_DTime() + "\n");
-            processTimeBack.setText(processTimeBack.getText() + "" + aNode.getNodeName() + " için " + aNode.getNode_DTime() + "\n");
-        }
-    }
 }
