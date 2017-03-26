@@ -23,26 +23,34 @@ public class MainActivity extends AppCompatActivity {
 
     private Button dereceGetir;
     private EditText dereceText;
-    private LinearLayout linearNodeDegree;
+    private LinearLayout linearNodeDegree,InfoLayout;
     private TextView nodeDegreeBack,totalEdgeCountBack,completeGraphBack,accessTimeBack,processTimeBack,ExplorerBack;
     private String MatrixFileRow;
     private String[] MatrixFileRowParts;
     private Node[] node;
     private int nodeCount = 0,totalEdge = 0;
     private Watch ZamanTutucu;
+    private boolean fileState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ana_ekran);//ana ekran tasarımını set ettik.
         initUI(); //ekrandaki componentleri yüklemesi için fonksiyonu çağırdık
-        ReadNodeCountFromFile(); //düğüm sayısını buluyoruz
-        CreateFirstNodes(); //ilk düğümleri oluşturuyoruz
-        ReadMatrixFromFile_CreateGraph(); //Dosyadan komşuluk değerlerini alıp düğümleri bağlıyoruz
-        DFS_Gezgini(node[0]); //DFS'e 0.nodu gönderiyoruz
-        setListeners(); //butona tıklama dinleyicisi yüklemek için gerekli methoda haber veriyoruz
-        copleteGraph_and_EdgeCount();
-        //DTime_and_FTime();
+        fileState = ReadNodeCountFromFile(); //düğüm sayısını buluyoruz
+        InfoLayout.setVisibility(View.GONE);
+        if(fileState){
+            InfoLayout.setVisibility(View.VISIBLE);
+            CreateFirstNodes(); //ilk düğümleri oluşturuyoruz
+            ReadMatrixFromFile_CreateGraph(); //Dosyadan komşuluk değerlerini alıp düğümleri bağlıyoruz
+            DFS_Gezgini(node[0]); //DFS'e 0.nodu gönderiyoruz
+            setListeners(); //butona tıklama dinleyicisi yüklemek için gerekli methoda haber veriyoruz
+            copleteGraph_and_EdgeCount();
+            //DTime_and_FTime();
+        }else
+            Toast.makeText(MainActivity.this,"DFSMatrix.Txt Dosyası Oluştur",Toast.LENGTH_LONG).show();
+
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         dereceGetir = (Button) findViewById(R.id.dereceButton); //xml den id'ye göre componentleri buluyoruz.
         dereceText = (EditText) findViewById(R.id.dereceTextField);
         linearNodeDegree = (LinearLayout) findViewById(R.id.LinearNodeDegree);
+        InfoLayout = (LinearLayout) findViewById(R.id.InfoLayoutAll);
         nodeDegreeBack = (TextView) findViewById(R.id.nodeDegreeBack);
         totalEdgeCountBack = (TextView) findViewById(R.id.totalEdgeCountBack);
         completeGraphBack = (TextView) findViewById(R.id.completeGraphBack);
@@ -61,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         linearNodeDegree.setVisibility(View.GONE);  //Kullanıcıdan değer alınmadan önce gösterilmesini istemiyoruz.
     }
 
-    protected void ReadNodeCountFromFile(){
+    protected boolean ReadNodeCountFromFile(){
         File fileMatrix = new File(Environment.getExternalStorageDirectory(),"DFSMatrix.txt");//Dosyayı açıyoruz.
         try {
             //bu kısımda toplam düğüm sayısını buluyoruz
@@ -72,11 +81,14 @@ public class MainActivity extends AppCompatActivity {
             FileMatrixBufferR.close();
             MatrixFileRowParts = null;
             MatrixFileRow = null;
+            return true;
         }catch (FileNotFoundException e){
             Toast.makeText(getApplicationContext(),"DOSYA BULUNAMADI",Toast.LENGTH_LONG).show();
+            return false;
         }
         catch (IOException e){
             Toast.makeText(getApplicationContext(),"DOSYA OKUNAMADI",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
 
@@ -166,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void DTime_and_FTime(){
-        for(int i = 0;i<node.length;i++){
-            accessTimeBack.setText(accessTimeBack.getText()+""+node[i].getNodeName()+" için "+node[i].getNode_DTime()+"\n");
-            processTimeBack.setText(processTimeBack.getText()+""+node[i].getNodeName()+" için "+node[i].getNode_DTime()+"\n");
+        for (Node aNode : node) {
+            accessTimeBack.setText(accessTimeBack.getText() + "" + aNode.getNodeName() + " için " + aNode.getNode_DTime() + "\n");
+            processTimeBack.setText(processTimeBack.getText() + "" + aNode.getNodeName() + " için " + aNode.getNode_DTime() + "\n");
         }
     }
 }
