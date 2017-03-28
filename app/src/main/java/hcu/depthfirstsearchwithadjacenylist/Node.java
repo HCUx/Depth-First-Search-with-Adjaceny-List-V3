@@ -5,69 +5,44 @@ package hcu.depthfirstsearchwithadjacenylist;
  */
 
 public class Node {
-    private String NodeColor=null;
-    private int Node_DTime=0,Node_FTime=0,AdjacentCount=0;
-    private Node[] adjacent=null;
-    private int adjacentCount=0;
-    private int NodeDegree=0;
-    private String nodeName=null;
+    private String NodeColor=null,NodeName=null;
+    private Adjacent adjacent=null;
+    private int dtime=0,ftime=0;
 
-    public Node(int adjacentCount) {
+    public Node() {
         NodeColor = "White";
-        Node_DTime = 0;
-        Node_FTime = 0;
-        this.adjacentCount = adjacentCount;
-        adjacent = new Node[adjacentCount];
     }
 
-    public int getNode_DTime() {
-        return Node_DTime;
+    public int getFtime() {
+        return ftime;
     }
 
-    public void setNode_DTime(int node_DTime) {
-        Node_DTime = node_DTime;
+    public void setFtime(int ftime) {
+        this.ftime = ftime;
     }
 
-    public int getNode_FTime() {
-        return Node_FTime;
+    public int getDTime() {
+        return dtime;
     }
 
-    public void setNode_FTime(int node_FTime) {
-        Node_FTime = node_FTime;
+    public void setDTime(int time) {
+        this.dtime = time;
     }
 
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public int getAdjacentCount() {
-        return adjacentCount;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public void setAdjacent(Node[] adjacent, String[] NodeParts) {
-        int index=0;
-        for(String part : NodeParts){
-            if(part.equals("1")){
-                this.adjacent[index] = adjacent[index];
-                this.NodeDegree++;
-            }
-            else{
-                this.adjacent[index] = null;
-            }
-            index++;
-        }
-    }
-
-    public Node[] getAdjacent() {
+    public Adjacent getAdjacent() {
         return adjacent;
     }
 
-    public int getNodeDegree(){
-        return this.NodeDegree;
+    public void setAdjacent(Adjacent adjacent) {
+        this.adjacent = adjacent;
+    }
+
+    public void setNodeName(String name) {
+        this.NodeName = name;
+    }
+
+    public String getNodeName() {
+        return NodeName;
     }
 
     public void setNodeColor(String nodeColor) {
